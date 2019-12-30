@@ -1,0 +1,9 @@
+variables:
+  - name: linux_jdk_10_imageName
+    value: "ubuntu-16.04"
+  - name: linux_jdk_10_jdk_version
+    value: "1.10"
+  - name: linux_jdk_11_imageName
+    value: "ubuntu-16.04"
+  - name: linux_jdk_11_jdk_version
+    value: "1.11"

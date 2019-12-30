@@ -1,0 +1,20 @@
+parameters:
+- name: jdk_version
+  type: string
+  default: 1.8
+- name: job_name
+  type: string
+  default: 'testBuildJob'
+
+
+steps:
+- task: Maven@3
+  inputs:
+    mavenPomFile: 'pom.xml'
+    mavenOptions: '-Xmx3072m'
+    javaHomeOption: 'JDKVersion'
+    jdkVersionOption: ${{ parameters.jdk_version }}
+    jdkArchitectureOption: 'x64'
+    publishJUnitResults: true
+    testResultsFiles: '**/surefire-reports/TEST-*.xml'
+    goals: 'package'
