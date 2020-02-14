@@ -47,7 +47,7 @@ jobs:
           jdkArchitectureOption: 'x64'
           publishJUnitResults: false
           testResultsFiles: '**/TEST-*.xml'
-          tasks: '${{ parameters.workingDirectory }}:release'
+          tasks: 'release'
       - task: PublishPipelineArtifact@1
         inputs:
           path: $(System.DefaultWorkingDirectory)/${{ parameters.workingDirectory }}/build
