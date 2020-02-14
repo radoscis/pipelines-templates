@@ -1,0 +1,54 @@
+parameters:
+- name: workingDirectory
+  type: string
+  default: ''
+- name: gitCiToken
+  type: string
+  default: ''
+- name: gitCiUserMail
+  type: string
+  default: ''
+- name: gitCiUserName
+  type: string
+  default: ''
+
+jobs:
+    - job: BuildJob
+      steps:
+      - checkout: self
+        submodules: true
+      # Allow scripts to access the system token so that the pipeline can push git changes (eg. version bump)
+        persistCredentials: true
+      # Checkout branch since by default Azure Pipelines do checkouts of specific commits (detached HEAD)
+      # and we need to be at master to be able to push version bump changes.
+      # We need to use a powershell script here to extract the proper branch name by removing 'refs/heads/' from the BUILD_SOURCEBRANCH variable
+      # (eg. 'refs/heads/feature/feat-a' becomes 'feature/feat-a').
+      - powershell: write-host "##vso[task.setvariable variable=branch]$($env:BUILD_SOURCEBRANCH.substring($env:BUILD_SOURCEBRANCH.indexOf('/', 5) + 1))"
+        displayName: "Extract the branch name"
+      - script: |
+          git config --global user.email "${{ parameters.gitCiUserMail }}"
+          git config --global user.name "${{ parameters.gitCiUserName }}"
+        displayName: "Configure git"
+      - script: |
+          sudo apt-get update
+          sudo apt-get -y install tree
+          git checkout $(branch)
+          git status
+          ls -l /home/vsts/work/1/s
+          tree /home/vsts/work/1/s
+        displayName: "Checkout branch"
+      - task: Gradle@2
+        inputs:
+          workingDirectory: ''
+          gradleWrapperFile: 'gradlew'
+          gradleOptions: '-Xmx3072m'
+          javaHomeOption: 'JDKVersion'
+          jdkVersionOption: '1.8'
+          jdkArchitectureOption: 'x64'
+          publishJUnitResults: false
+          testResultsFiles: '**/TEST-*.xml'
+          tasks: '${{ parameters.workingDirectory }}:release'
+      - task: PublishPipelineArtifact@1
+        inputs:
+          path: $(System.DefaultWorkingDirectory)/${{ parameters.workingDirectory }}/build
+          artifact: gradleBuild
