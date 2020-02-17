@@ -49,6 +49,7 @@ jobs:
           # git remote show origin
           git config --global user.email "${{ parameters.gitCiUserMail }}"
           git config --global user.name "${{ parameters.gitCiUserName }}"
+          git checkout $(branch)
         # env:
         #   GH_AZ_TOKEN: ${{ parameters.gitCiToken }}
         displayName: "Configure git"
