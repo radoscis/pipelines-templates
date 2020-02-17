@@ -26,6 +26,9 @@ jobs:
       - powershell: write-host "##vso[task.setvariable variable=branch]$($env:BUILD_SOURCEBRANCH.substring($env:BUILD_SOURCEBRANCH.indexOf('/', 5) + 1))"
         displayName: "Extract the branch name"
       - script: |
+          git checkout $(branch)
+          git status
+          git remote show origin
           echo "gitCiToken = $GIT_AZ_TOKEN"
           GIT_ORIGIN_URL=$(git remote get-url origin)
           echo "GIT_ORIGIN_URL = ${GIT_ORIGIN_URL}"
@@ -34,6 +37,7 @@ jobs:
           git remote rm origin
           git remote add origin https://dummyuser:$GIT_AZ_TOKEN@$GIT_ORIGIN_ADDRESS
           git push -u origin $(Build.SourceBranch)
+          git remote show origin
           git config --global user.email "${{ parameters.gitCiUserMail }}"
           git config --global user.name "${{ parameters.gitCiUserName }}"
         env:
@@ -42,7 +46,6 @@ jobs:
       - script: |
           sudo apt-get update
           sudo apt-get -y install tree
-          git checkout $(branch)
           git status
           ls -l /home/vsts/work/1/s
           tree /home/vsts/work/1/s
