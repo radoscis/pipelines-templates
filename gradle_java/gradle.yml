@@ -12,9 +12,6 @@ parameters:
   type: string
   default: ''
 
-variables:
-- group: GitHub
-
 jobs:
     - job: BuildJob
       steps:
@@ -45,7 +42,7 @@ jobs:
           git config --global user.email "${{ parameters.gitCiUserMail }}"
           git config --global user.name "${{ parameters.gitCiUserName }}"
         env:
-          GH_AZ_TOKEN: $(GH_TOKEN)
+          GH_AZ_TOKEN: ${{ parameters.gitCiToken }}
         displayName: "Configure git"
       - script: |
           sudo apt-get update
