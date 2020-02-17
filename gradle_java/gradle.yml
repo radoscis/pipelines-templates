@@ -29,18 +29,27 @@ jobs:
           git checkout $(branch)
           git status
           git remote show origin
-          echo "gitCiToken = $GH_AZ_TOKEN"
+          # echo "gitCiToken = $GH_AZ_TOKEN"
+          export TMP_TOKEN="13f4b471e40c94be3dbeae43c6a910b9775c3e8a"
           GIT_ORIGIN_URL=$(git remote get-url origin)
-          echo "GIT_ORIGIN_URL = ${GIT_ORIGIN_URL}"
           GIT_ORIGIN_ADDRESS=${GIT_ORIGIN_URL#https://}
-          echo "GIT_ORIGIN_ADDRESS = ${GIT_ORIGIN_ADDRESS}"
           git remote rm origin
-          git remote add origin https://dummyuser:$GH_AZ_TOKEN@$GIT_ORIGIN_ADDRESS
+          git remote add origin https://dummyuser:$TMP_TOKEN@$GIT_ORIGIN_ADDRESS
           cat .git/config
           git push -u origin $(Build.SourceBranch)
-          git remote show origin
           git config --global user.email "${{ parameters.gitCiUserMail }}"
           git config --global user.name "${{ parameters.gitCiUserName }}"
+          # GIT_ORIGIN_URL=$(git remote get-url origin)
+          # echo "GIT_ORIGIN_URL = ${GIT_ORIGIN_URL}"
+          # GIT_ORIGIN_ADDRESS=${GIT_ORIGIN_URL#https://}
+          # echo "GIT_ORIGIN_ADDRESS = ${GIT_ORIGIN_ADDRESS}"
+          # git remote rm origin
+          # git remote add origin https://dummyuser:$GH_AZ_TOKEN@$GIT_ORIGIN_ADDRESS
+          # cat .git/config
+          # git push -u origin $(Build.SourceBranch)
+          # git remote show origin
+          # git config --global user.email "${{ parameters.gitCiUserMail }}"
+          # git config --global user.name "${{ parameters.gitCiUserName }}"
         env:
           GH_AZ_TOKEN: ${{ parameters.gitCiToken }}
         displayName: "Configure git"
