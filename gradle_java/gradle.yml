@@ -37,7 +37,7 @@ jobs:
           git config --global user.email "${{ parameters.gitCiUserMail }}"
           git config --global user.name "${{ parameters.gitCiUserName }}"
         env:
-          GIT_AZ_TOKEN: $(gitCiToken)
+          GIT_AZ_TOKEN: ${{ parameters.gitCiToken }}
         displayName: "Configure git"
       - script: |
           sudo apt-get update
