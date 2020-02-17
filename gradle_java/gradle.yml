@@ -27,6 +27,7 @@ jobs:
         displayName: "Extract the branch name"
       - script: |
           git checkout $(branch)
+          cat .git/config
           git status
           git remote show origin
           # echo "gitCiToken = $GH_AZ_TOKEN"
