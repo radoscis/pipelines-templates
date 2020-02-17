@@ -27,16 +27,14 @@ jobs:
         displayName: "Extract the branch name"
       - script: |
           git checkout $(branch)
-          cat .git/config
           git status
           git remote show origin
           # echo "gitCiToken = $GH_AZ_TOKEN"
           GIT_ORIGIN_URL=$(git remote get-url origin)
           GIT_ORIGIN_ADDRESS=${GIT_ORIGIN_URL#https://}
-          git remote rm origin
+          rm -f .git/config
           git remote add origin https://dummyuser:$GH_AZ_TOKEN@$GIT_ORIGIN_ADDRESS
           cat .git/config
-          echo "Source branch name : $(Build.SourceBranch)"
           git push -u origin $(branch)
           git config --global user.email "${{ parameters.gitCiUserMail }}"
           git config --global user.name "${{ parameters.gitCiUserName }}"
